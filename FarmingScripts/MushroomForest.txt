@@ -11,10 +11,15 @@ func setOuroboros()
     equipL ouroboros
     equipR towering shield +2
 
+func setDash()
+    equipL poison hammer *5
+    equipR dashing shield
+
 var loops = 1
 var run = 0
 var fastest_run = 0
 var timeSet = false
+var recovering = false
 
 ?loc=Mushroom
     >`0,1,Run # = @loops@
@@ -23,41 +28,58 @@ var timeSet = false
         >`65,0,Fastest Run = First Run :p 
     :
         >`0,0,Prev Run = @time.FormatCasual(run)@
-        >`65,0,Fastest Run = @time.FormatCasual(fastest_run)@ 
-    ?loc.begin
-        disable abilities
-        disable loadout input
-        disable hud abu
-        setAttack()
+        >`65,0,Fastest Run = @time.FormatCasual(fastest_run)@
     ?loc.loop
         loops++
+        timeSet = false
+    ?time <=1
         disable abilities
         disable loadout input
         disable hud abu
         ?hp < maxhp
             setOuroboros()
+        :
+            setAttack()
     ?time >= 0 & time <= (30*5)
         speak("Shrooooooooms @u@")
-
     ?foe
         ?foe = mushroom_boss | foe = mushroom_boss_fat | foe = mushroom_boss_skinny
-            ?ai.paused
+            ?ai.paused | ai.enabled = false
                 speak("Long ahh cutscene frfr :/")
                 setOuroboros()
             :
-                >`65,1,Current Boss = @foe.state@
+                >`65,1,Current State = @foe.state@
                 >`0,2,Distance = @foe.distance@
-                     
-                ?foe.distance <= 5
-                    setAttack()
-                :?foe.distance > 5
-                    equipL poison hammer *5
-                    equipR dashing shield
+                
+                ?recovering = false & armor < 2 & foe = mushroom_boss_fat
+                    recovering = true
+                    equipL mind
+                :?recovering = false
+                    ?foe = mushroom_boss_skinny   
+                        speak("OH UR MINE NOW BOI >:)!!")
+                    ?foe.distance <= 5
+                        setAttack()
+                    :?foe.distance > 5
+                        setDash()
+                :?recovering = true
+                    ?foe = mushroom_boss_fat
+                        speak("WOAH THERE BUDDY!")
+                        equipL poison wand
+                        equipR towering shield +2
+                        ?armor = maxarmor
+                            recovering = false
+                            setAttack()
+                    :
+                        recovering = false
+                    
         :
             ?hp < maxhp
                 setOuroboros()
             :
-                equip bardiche
+                ?foe.distance <= 10
+                    equip bardiche
+                :?foe.distance > 10
+                    setAttack()
     :?pickup
         equipL star
         equipR towering shield +2
