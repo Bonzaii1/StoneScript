@@ -1,0 +1,16 @@
+func speak()
+    >o-6,3,#red,Off to get Stones!
+
+func setStones()
+    equipL star
+    equipR ouroboros
+
+?loc=Rocky
+    ?loc.begin | loc.loop
+        setStones()
+    ?time >=0 & time <= (30 * 5)
+        speak()
+    ?harvest.distance < 7
+        equip shovel
+    :
+        setStones()

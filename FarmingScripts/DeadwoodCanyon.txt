@@ -1,0 +1,59 @@
+//DEADWOOD SCRIPT
+// -Bezerra, the Sage
+func speak()
+    >o-10,0,#red,Time to chop some wood >:)!
+
+func setBase()
+    equipL fire hammer +3
+    equipR towering shield +2
+
+func setOuroboros()
+    equipL ouroboros
+    equipR towering shield +2
+
+var run = 0
+var fastest_run = 0
+
+?loc=Deadwood
+    ?run = 0
+        >`0,0,Prev Run = First Run :p
+        >`65,0,Fastest Run = First Run :p 
+    :
+        >`0,0,Prev Run = @time.FormatCasual(run)@
+        >`65,0,Fastest Run = @time.FormatCasual(fastest_run)@ 
+    ?loc.begin
+        setBase()
+    ?loc.loop
+        ?hp < maxhp
+            equipL ouroboros
+            equipR towering shield +2
+    ?time >= 0 & time <= (30*5)
+        speak()
+    ?pickup.distance < 6
+        equipL star
+    :
+        ?foe
+            ?foe = huge_mosquito
+                ?hp < maxhp
+                    setOuroboros()
+                :
+                    equip repeating crossbow +2
+            :?foe = scarab
+                ?hp < maxhp
+                    setOuroboros()
+                :    
+                    equip bardiche
+            :?foe = tree_boss
+                setBase()
+                ?armor = 0 & item.potion ! empty & item.potion = auto
+                    activate potion
+        :
+            setOuroboros()
+    ?ai.paused & foe.count = 0
+        run = totaltime
+        ?fastest_run = 0 | run < fastest_run
+            fastest_run = run
+    
+    
+
+
