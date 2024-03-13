@@ -38,7 +38,7 @@ var fastest_run = 0
         ?foe = spider_boss
             ?ai.paused
                 speak("Long ahh cutscene frfr :/")
-                setOuroboros()
+                setAttack()
             :
                 ?foe.distance > 15
                     setSpeed()
@@ -46,9 +46,11 @@ var fastest_run = 0
                     equipR dashing shield
                 :
                      >`65,1,Current Boss State = @foe.state@
-                    ?armor < 3
-                        setAttack()
+                    ?armor < 1
+                        equipL poison wand
+                        equipR compound shield *8
                     :
+                        equipL sword *8
                         equipR moondial
                     
         :
@@ -57,7 +59,10 @@ var fastest_run = 0
             :?foe.distance <=15 & foe.distance >10
                 equipR dashing shield
             :
-                equip bardiche
+                ?foe.count = 1
+                   setAttack()
+                :
+                   equip bardiche
     :?pickup.distance < 5
         equipL star
         equipR towering shield +2
