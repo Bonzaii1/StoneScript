@@ -1,7 +1,7 @@
 //DEADWOOD SCRIPT
 // -Bezerra, the Sage
 func speak(message)
-    >o-7,0,#red,@message@
+    >o-7,-2,#red,@message@
 
 func setBase()
     equipL sword *8
@@ -9,16 +9,23 @@ func setBase()
 
 var run = 0
 var fastest_run = 0
-
+var loops = 1
 ?loc=Deadwood
     >`0,1,Current Time = @time.FormatCasual(totaltime)@
+    >`0,2,Run # = @loops@
     >`65,0,Fastest Run = @time.FormatCasual(loc.bestTime)@ 
     ?run = 0
         >`0,0,Prev Run = First Run :p
     :
         >`0,0,Prev Run = @time.FormatCasual(run)@
+    ?loc.loop
+        loops++
     ?time <=1
         setBase()
+        disable loadout input
+        disable abilities
+        disable hud abu
+        disable banner
     ?time >= 0 & time <= (30*5)
         speak("OKKKKKKK, HERE WE GOOOOOO")
     
@@ -28,22 +35,28 @@ var fastest_run = 0
             ?ai.paused
                 speak("Bruh, hurry it up man.")
 
-
-            ?foe.distance > 5
+            ?foe.distance > 15
+                equipL triskelion
+                equipR compound shield *8
+            :?foe.distance > 5 & foe.distance < 15
                 equipR dashing shield
             :
-                ?foe.state = 32
+                ?foe.state = 32 & armor < 3
                     equipL poison wand *7
                     equipR compound shield *8
                 :
-                    setBase()
+                    equipL sword *8
+                    equipR moondial
         :
             ?foe.count > 2
-                ?foe.distance > 10
+                ?foe.distance > 15
+                    equipL triskelion
+                    equipR compound shield *8
+                :?foe.distance > 10 & foe.distance <=15
                     ?armor >= 6
                         equipR dashing shield
                     :
-                        equipR compound shield *8
+                        setBase()
                 :
                     equip bardiche
 
@@ -52,11 +65,12 @@ var fastest_run = 0
                     equipR dashing shield
                 :
                     setBase()
-    :?pickup
+    :?pickup.distance < 5
         equipL star
         equipR compound shield *8
     :
-        setBase()
+        equipL triskelion
+        equipR compound shield *8
     
     ?ai.paused & foe.count = 0
         run = totaltime
