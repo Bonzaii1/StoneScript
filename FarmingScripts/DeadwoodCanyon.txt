@@ -32,7 +32,7 @@ var fastest_run = 0
             ?foe.distance > 5
                 equipR dashing shield
             :
-                foe.state = 32
+                ?foe.state = 32
                     equipL poison wand *7
                     equipR compound shield *8
                 :
@@ -40,7 +40,10 @@ var fastest_run = 0
         :
             ?foe.count > 2
                 ?foe.distance > 10
-                    equipR dashing shield
+                    ?armor >= 6
+                        equipR dashing shield
+                    :
+                        equipR compound shield *8
                 :
                     equip bardiche
 
