@@ -15,7 +15,7 @@ func drawLoadout()
     >o5,30,#green,@poisonHammer@
 
 func speak(message)
-    >o-10,0,#red,@message@
+    >o-10,-2,#red,@message@
 
 func setAttack(itemLeft)
     equipL @itemLeft@
@@ -42,6 +42,7 @@ var run = 0
 var recovering = false
 
 ?loc=Mushroom
+    drawLoadout()
    >`0,1,Current Time = @time.FormatCasual(totaltime)@
     >`0,2,Run # = @loops@
     >`65,0,Fastest Run = @time.FormatCasual(loc.bestTime)@ 
@@ -57,9 +58,9 @@ var recovering = false
         disable hud abu
         setSpeed("compound shield")
     ?time >= 0 & time <= (30*5)
-        var face = "@~@"
+        var emote = "@~@"
         speak("Shrooooooooms")
-        >( @face@
+        >( @emote@
     ?foe
         ?foe = mushroom_boss | foe = mushroom_boss_fat | foe = mushroom_boss_skinny
             ?ai.paused | ai.enabled = false
@@ -82,7 +83,7 @@ var recovering = false
                         :
                             setAttackSpeed("sword")
                     :?foe.distance > 5 & foe.distance <= 15
-                        setDash()
+                        setDash("sword")
                     :?foe.distance > 15
                         setSpeed("compound shield")
                 :?recovering = true
@@ -100,6 +101,8 @@ var recovering = false
             ?foe.distance > 15
                 setSpeed("compound shield")
             :?foe.distance > 10 & foe.distance <=15
+                setDash("sword")
+            :?foe.distance <=10
                 ?foe.count > 1
                     equip bardiche
                 :   
