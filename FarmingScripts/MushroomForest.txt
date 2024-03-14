@@ -1,5 +1,19 @@
 //MUSHROOM FOREST SCRIPT
 // -Bezerra, the Sage
+
+var poisonHammer
+poisonHammer = ascii
+#<∞]#
+##║##
+##ˈ##
+asciiend
+
+func drawLoadout()
+    draw.Box(3, 15, 10, 10, #FFFF00, 1)
+    >o5,18,#blue,@item.left@
+    >o5,22,#blue,@item.right@
+    >o5,30,#green,@poisonHammer@
+
 func speak(message)
     >o-10,0,#red,@message@
 
