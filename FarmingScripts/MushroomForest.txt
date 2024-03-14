@@ -3,50 +3,54 @@
 func speak(message)
     >o-10,0,#red,@message@
 
-func setAttack()
-    equipL poison hammer *5
-    equipR towering shield +2
+func setAttack(itemLeft)
+    equipL @itemLeft@
+    equipR compound shield *9
 
-func setOuroboros()
-    equipL ouroboros
-    equipR towering shield +2
+func setAttackSpeed()
+    equipL sword
+    equipR moon
 
-func setDash()
-    equipL poison hammer *5
+func setSpeed(itemRight)
+    equipL triskelion
+    equip @itemRight@
+
+func setDash(itemLeft)
+    equipL @itemLeft@
     equipR dashing shield
+
+func setPickup(itemRight)
+    equipL star
+    equipR @itemRight@
 
 var loops = 1
 var run = 0
-var fastest_run = 0
-var timeSet = false
 var recovering = false
 
 ?loc=Mushroom
-    >`0,1,Run # = @loops@
+   >`0,1,Current Time = @time.FormatCasual(totaltime)@
+    >`0,2,Run # = @loops@
+    >`65,0,Fastest Run = @time.FormatCasual(loc.bestTime)@ 
     ?run = 0
         >`0,0,Prev Run = First Run :p
-        >`65,0,Fastest Run = First Run :p 
     :
         >`0,0,Prev Run = @time.FormatCasual(run)@
-        >`65,0,Fastest Run = @time.FormatCasual(fastest_run)@
     ?loc.loop
         loops++
-        timeSet = false
     ?time <=1
         disable abilities
         disable loadout input
         disable hud abu
-        ?hp < maxhp
-            setOuroboros()
-        :
-            setAttack()
+        setSpeed("compound shield")
     ?time >= 0 & time <= (30*5)
-        speak("Shrooooooooms @u@")
+        var face = "@~@"
+        speak("Shrooooooooms")
+        >( @face@
     ?foe
         ?foe = mushroom_boss | foe = mushroom_boss_fat | foe = mushroom_boss_skinny
             ?ai.paused | ai.enabled = false
                 speak("Long ahh cutscene frfr :/")
-                setOuroboros()
+                >( Ò,ó
             :
                 >`65,1,Current State = @foe.state@
                 >`0,2,Distance = @foe.distance@
@@ -56,41 +60,44 @@ var recovering = false
                     equipL mind
                 :?recovering = false
                     ?foe = mushroom_boss_skinny   
-                        speak("OH UR MINE NOW BOI >:)!!")
+                        speak("OH UR MINE NOW BOI!")
+                        >( ʘ‿ʘ
                     ?foe.distance <= 5
-                        setAttack()
-                    :?foe.distance > 5
+                        ?foe.armor > 1
+                            setAttack("poison hammer")
+                        :
+                            setAttackSpeed("sword")
+                    :?foe.distance > 5 & foe.distance <= 15
                         setDash()
+                    :?foe.distance > 15
+                        setSpeed("compound shield")
                 :?recovering = true
                     ?foe = mushroom_boss_fat
                         speak("WOAH THERE BUDDY!")
                         equipL poison wand
-                        equipR towering shield +2
+                        equipR compound shield
                         ?armor = maxarmor
                             recovering = false
-                            setAttack()
                     :
                         recovering = false
                     
         :
-            ?hp < maxhp
-                setOuroboros()
-            :
-                ?foe.distance <= 10
+            >( ☉ ‿ ⚆
+            ?foe.distance > 15
+                setSpeed("compound shield")
+            :?foe.distance > 10 & foe.distance <=15
+                ?foe.count > 1
                     equip bardiche
-                :?foe.distance > 10
-                    setAttack()
-    :?pickup
-        equipL star
-        equipR towering shield +2
+                :   
+                    setAttack("sword *10")
+    :?pickup.distance < 5
+        setPickup("compound shield")
     :
-        setOuroboros()
+        setSpeed("compound shield")
         
 
-    ?ai.paused & foe.count = 0
-        ?timeSet = false
-            run = totaltime
-            ?fastest_run = 0 | run < fastest_run
-                fastest_run = run
-            timeSet = true
+    ?ai.paused & foe.count = 0   
+        run = totaltime
+        ?fastest_run = 0 | run < fastest_run
+            fastest_run = run 
         speak("Absolutely dogged on kid >:)")
