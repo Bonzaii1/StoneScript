@@ -3,16 +3,16 @@
 
 var poisonHammer
 poisonHammer = ascii
-#<∞]#
+#<∞］#
 ##║##
 ##ˈ##
 asciiend
 
 func drawLoadout()
-    draw.Box(3, 15, 10, 10, #FFFF00, 1)
-    >o5,18,#blue,@item.left@
-    >o5,22,#blue,@item.right@
-    >o5,30,#green,@poisonHammer@
+    draw.Box(3, 5, 10, 5, #FFFF00, 1)
+    >`5,7,#blue,@item.left@
+    >`5,9,#blue,@item.right@
+    >`5,15,#green,@poisonHammer@
 
 func speak(message)
     >o-10,-2,#red,@message@
@@ -43,7 +43,7 @@ var recovering = false
 
 ?loc=Mushroom
     drawLoadout()
-   >`0,1,Current Time = @time.FormatCasual(totaltime)@
+    >`0,1,Current Time = @time.FormatCasual(totaltime)@
     >`0,2,Run # = @loops@
     >`65,0,Fastest Run = @time.FormatCasual(loc.bestTime)@ 
     ?run = 0
@@ -56,65 +56,67 @@ var recovering = false
         disable abilities
         disable loadout input
         disable hud abu
-        setSpeed("compound shield")
+        setSpeed(＂compound shield＂)
     ?time >= 0 & time <= (30*5)
-        var emote = "@~@"
-        speak("Shrooooooooms")
+        var emote = ＂@~@＂
+        speak(＂Shrooooooooms＂)
         >( @emote@
     ?foe
         ?foe = mushroom_boss | foe = mushroom_boss_fat | foe = mushroom_boss_skinny
             ?ai.paused | ai.enabled = false
-                speak("Long ahh cutscene frfr :/")
+                speak(＂Long ahh cutscene frfr :/＂)
                 >( Ò,ó
             :
                 >`65,1,Current State = @foe.state@
                 >`0,2,Distance = @foe.distance@
                 
-                ?recovering = false & armor < 2 & foe = mushroom_boss_fat
+                ?recovering = false & armor < 1
                     recovering = true
-                    equipL mind
                 :?recovering = false
                     ?foe = mushroom_boss_skinny   
-                        speak("OH UR MINE NOW BOI!")
+                        speak(＂OH UR MINE NOW BOI!＂)
                         >( ʘ‿ʘ
                     ?foe.distance <= 5
                         ?foe.armor > 1
-                            setAttack("poison hammer")
+                            setAttack(＂poison hammer＂)
                         :
-                            setAttackSpeed("sword")
+                            setAttackSpeed()
                     :?foe.distance > 5 & foe.distance <= 15
-                        setDash("sword")
+                        setDash(＂sword＂)
                     :?foe.distance > 15
-                        setSpeed("compound shield")
+                        setSpeed(＂compound shield＂)
                 :?recovering = true
                     ?foe = mushroom_boss_fat
-                        speak("WOAH THERE BUDDY!")
-                        equipL poison wand
+                        speak(＂WOAH THERE BUDDY＂)
+                        equipL poison hammer
                         equipR compound shield
                         ?armor = maxarmor
                             recovering = false
                     :
-                        recovering = false
+                        ?foe.distance > 5 & foe.distance <= 15
+                            setDash(＂sword＂)
+                        :
+                            setAttack(＂sword＂)
+                        ?armor > 2
+                            recovering = false
                     
         :
             >( ☉ ‿ ⚆
             ?foe.distance > 15
-                setSpeed("compound shield")
+                setSpeed(＂compound shield＂)
             :?foe.distance > 10 & foe.distance <=15
-                setDash("sword")
+                setDash(＂sword＂)
             :?foe.distance <=10
                 ?foe.count > 1
                     equip bardiche
                 :   
-                    setAttack("sword *10")
+                    setAttack(＂sword *10＂)
     :?pickup.distance < 5
-        setPickup("compound shield")
+        setPickup(＂compound shield＂)
     :
-        setSpeed("compound shield")
+        setSpeed(＂compound shield＂)
         
 
     ?ai.paused & foe.count = 0   
         run = totaltime
-        ?fastest_run = 0 | run < fastest_run
-            fastest_run = run 
-        speak("Absolutely dogged on kid >:)")
+        speak(＂Absolutely dogged on kid >:)＂)
