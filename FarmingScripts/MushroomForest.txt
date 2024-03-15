@@ -44,7 +44,7 @@ var recovering = false
 ?loc=Mushroom
     //drawLoadout()
     >`0,1,Current Time = @time.FormatCasual(totaltime)@
-    >`0,2,Run # = @loops@
+    >`0,2,Run # = @screen.i@
     >`65,0,Fastest Run = @time.FormatCasual(loc.bestTime)@ 
     ?run = 0
         >`0,0,Prev Run = First Run :p
@@ -102,13 +102,17 @@ var recovering = false
                     
         :
             >( ☉ ‿ ⚆
+            ?screen.i = "7"
+                equip blade
+                activate R
             ?foe.distance > 15
                 setSpeed("compound shield")
             :?foe.distance > 10 & foe.distance <=15
                 setDash("sword")
             :?foe.distance <=10
                 ?foe.count > 1
-                    equip bardiche
+                    equipL poison wand +0
+                    equipR moon
                 :   
                     setAttack("sword *10")
     :?pickup.distance < 5
