@@ -1,6 +1,8 @@
 //MUSHROOM FOREST SCRIPT
 // -Bezerra, the Sage
 
+
+
 var poisonHammer
 poisonHammer = ascii
 #<∞］#
@@ -53,9 +55,9 @@ var recovering = false
     ?loc.loop
         loops++
     ?time <=1
-        disable abilities
         disable loadout input
         disable hud abu
+        disable banner
         setSpeed("compound shield")
     ?time >= 0 & time <= (30*5)
         var emote = "@~@"
@@ -73,12 +75,18 @@ var recovering = false
                 ?recovering = false & armor < 1
                     recovering = true
                 :?recovering = false
+                    ?foe = mushroom_boss_fat & item.potion ! empty & item.potion = auto
+                            activate potion
                     ?foe = mushroom_boss_skinny   
                         speak("OH UR MINE NOW BOI!")
                         >( ʘ‿ʘ
                     ?foe.distance <= 5
                         ?foe.armor > 1
-                            setAttack("poison hammer")
+                            ?loc.stars = 8
+                                equipR compound shield
+                            :
+                                equipR poison sword
+                            equipL poison hammer
                         :
                             setAttackSpeed()
                     :?foe.distance > 5 & foe.distance <= 15
@@ -88,8 +96,9 @@ var recovering = false
                 :?recovering = true
                     ?foe = mushroom_boss_fat
                         speak("WOAH THERE BUDDY")
+                        
                         equipL poison hammer
-                        equipR compound shield
+                        equipR poison sword
                         ?armor = maxarmor
                             recovering = false
                     :
@@ -102,17 +111,14 @@ var recovering = false
                     
         :
             >( ☉ ‿ ⚆
-            ?screen.i = "7"
-                equip blade
-                activate R
             ?foe.distance > 15
                 setSpeed("compound shield")
             :?foe.distance > 10 & foe.distance <=15
                 setDash("sword")
             :?foe.distance <=10
                 ?foe.count > 1
-                    equipL poison wand +0
-                    equipR moon
+                    equipL poison wand +1
+                    equipR poison wand +0
                 :   
                     setAttack("sword *10")
     :?pickup.distance < 5

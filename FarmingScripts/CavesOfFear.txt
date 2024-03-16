@@ -47,11 +47,11 @@ var fastest_run = 0
                 :
                      >`65,1,Current Boss State = @foe.state@
                     ?armor < 1
-                        equipL poison wand
+                        equipL poison wand +1
                         equipR compound shield *8
                     :
-                        equipL sword *8
-                        equipR moondial
+                        equipL sword 
+                        equipR sword *9
                     
         :
             ?foe.distance > 15
